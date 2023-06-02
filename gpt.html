@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CHATGPT API Demo</title>
-</head>
-<body>
-  <h1>CHATGPT API Demo</h1>
-
-  <label for="api-key">Enter your CHATGPT API key:</label>
-  <input type="text" id="api-key" name="api-key">
-
-  <label for="user-input">User Input:</label>
-  <input type="text" id="user-input" name="user-input">
-
-  <button onclick="sendMessage()">Send Message</button>
-
-  <div id="chatlog"></div>
-
+  <meta charset="UTF-8">
+  <title>CHATGPT Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #chat-container {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-top: 10px;
+    }
+  </style>
   <script>
-    function sendMessage() {
-      var apiKey = document.getElementById("api-key").value;
-      var userInput = document.getElementById("user-input").value;
-      var chatLog = document.getElementById("chatlog");
+    function sendChatRequest() {
+      var messageInput = document.getElementById("message-input");
+      var chatContainer = document.getElementById("chat-container");
 
-      // Make API call to CHATGPT API
-      fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + apiKey
-        },
-        body: JSON.stringify({
-          messages: [
-            { role: "system", content: "You are a user" },
-            { role: "user", content: userInput }
-          ]
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Display response from CHATGPT API
-        var chatMessage = data.choices[0].message.content;
-        chatLog.innerHTML += "<p><strong>User:</strong> " + userInput + "</p>";
-        chatLog.innerHTML += "<p><strong>ChatGPT:</strong> " + chatMessage + "</p>";
-      })
-      .catch(error => console.error(error));
+      var message = messageInput.value.trim();
+      if (message === "") {
+        return;
+      }
+
+      chatContainer.innerHTML += "<p>User: " + message + "</p>";
+
+      // 发送API请求并获取CHATGPT的回复
+      // 这里需要替换成你自己的CHATGPT API的代码
+      // 你可以使用AJAX、Fetch或其他方法发送请求
+      // 并将CHATGPT的回复添加到chatContainer中
+      // 示例中使用console.log来模拟CHATGPT的回复
+      console.log("CHATGPT: This is a sample response.");
+
+      messageInput.value = "";
     }
   </script>
+</head>
+<body>
+  <h1>CHATGPT Demo</h1>
+  <div id="chat-container"></div>
+  <input type="text" id="message-input" placeholder="在这里输入您的消息" autofocus>
+  <button onclick="sendChatRequest()">发送</button>
 </body>
 </html>
