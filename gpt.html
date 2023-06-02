@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CHATGPT API Demo</title>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<h1>CHATGPT API Demo</h1>
+	<label for="user-input">请输入您的消息：</label>
+	<input type="text" id="user-input">
+	<button onclick="sendUserMessage()">发送</button>
+	<div id="chat-log"></div>
+	<script>
+		const API_KEY = "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";
+		const API_URL = "https://openai.1rmb.tk/v1/engines/davinci-codex/completions";
+
+		function sendUserMessage() {
+			const userInput = document.getElementById("user-input").value;
+			if (userInput.trim() === "") {
+				return;
+			}
+			const chatLog = document.getElementById("chat-log");
+			chatLog.innerHTML += "<p>You: " + userInput + "</p>";
+			document.getElementById("user-input").value = "";
+			axios.post(API_URL, {
+				prompt: "User: " + userInput + "\nCHATGPT:",
+				max_tokens: 50,
+				temperature: 0.5,
+				api_key: API_KEY
+			}).then(response => {
+				const chatResponse = response.data.choices[0].text.trim();
+				chatLog.innerHTML += "<p>CHATGPT: " + chatResponse + "</p>";
+			}).catch(error => {
+				console.error(error);
+			});
+		}
+	</script>
+</body>
+</html>
