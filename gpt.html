@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CHATGPT API Demo</title>
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <title>CHATGPT API Demo</title>
 </head>
 <body>
-	<h1>CHATGPT API Demo</h1>
-	<label for="user-input">请输入您的消息：</label>
-	<input type="text" id="user-input">
-	<button onclick="sendUserMessage()">发送</button>
-	<div id="chat-log"></div>
-	<script>
-		const API_KEY = "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";
-		const API_URL = "https://openai.1rmb.tk/v1/engines/davinci-codex/completions";
+  <h1>CHATGPT API Demo</h1>
 
-		function sendUserMessage() {
-			const userInput = document.getElementById("user-input").value;
-			if (userInput.trim() === "") {
-				return;
-			}
-			const chatLog = document.getElementById("chat-log");
-			chatLog.innerHTML += "<p>You: " + userInput + "</p>";
-			document.getElementById("user-input").value = "";
-			axios.post(API_URL, {
-				prompt: "User: " + userInput + "\nCHATGPT:",
-				max_tokens: 50,
-				temperature: 0.5,
-				api_key: API_KEY
-			}).then(response => {
-				const chatResponse = response.data.choices[0].text.trim();
-				chatLog.innerHTML += "<p>CHATGPT: " + chatResponse + "</p>";
-			}).catch(error => {
-				console.error(error);
-			});
-		}
-	</script>
+  <label for="api-key">Enter your CHATGPT API key:</label>
+  <input type="text" id="api-key" name="api-key">
+
+  <label for="user-input">User Input:</label>
+  <input type="text" id="user-input" name="user-input">
+
+  <button onclick="sendMessage()">Send Message</button>
+
+  <div id="chatlog"></div>
+
+  <script>
+    function sendMessage() {
+      var apiKey = document.getElementById("api-key").value;
+      var userInput = document.getElementById("user-input").value;
+      var chatLog = document.getElementById("chatlog");
+
+      // Make API call to CHATGPT API
+      fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey
+        },
+        body: JSON.stringify({
+          messages: [
+            { role: "system", content: "You are a user" },
+            { role: "user", content: userInput }
+          ]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Display response from CHATGPT API
+        var chatMessage = data.choices[0].message.content;
+        chatLog.innerHTML += "<p><strong>User:</strong> " + userInput + "</p>";
+        chatLog.innerHTML += "<p><strong>ChatGPT:</strong> " + chatMessage + "</p>";
+      })
+      .catch(error => console.error(error));
+    }
+  </script>
 </body>
 </html>
